@@ -9,11 +9,12 @@ import TopNavigation from '../components/Layout/Navigation/Navigation'
 class Index extends React.Component {
   render() {
     const postEdges = this.props.data.allWordpressPost.edges
+    console.log(postEdges);
     return (
       <HomeContainer>
         <Helmet title={config.siteTitle} />
         <SEO postEdges={postEdges} />
-        <TopNavigation pages={this.props.data.allWordpressPage} />
+        {/* <TopNavigation pages={this.props.data.allWordpressPage} /> */}
         <MainContentContainer>
           <h1>Gatsby + Wordpress Blog</h1>
           <p style={{ textAlign: 'center' }}>
@@ -26,7 +27,12 @@ class Index extends React.Component {
             </a>
           </p>
           <Divider />
-          <PostListing postEdges={postEdges} />
+          {postEdges.map(post =>
+            <div key={post.node.id}>
+              <h1>{post.node.title}</h1>
+            </div>
+          )}
+          {/* <PostListing postEdges={postEdges} /> */}
         </MainContentContainer>
       </HomeContainer>
     )
@@ -68,16 +74,8 @@ export const pageQuery = graphql`
     allWordpressPost {
       edges {
         node {
-          featured_media {
-            source_url
-          }
           author {
             name
-            avatar_urls {
-              wordpress_24
-              wordpress_48
-              wordpress_96
-            }
           }
           date
           slug
@@ -85,26 +83,10 @@ export const pageQuery = graphql`
           modified
           excerpt
           id
-          acf {
-            project
-            date
-          }
           categories {
             name
           }
-          tags {
-            name
-          }
           content
-        }
-      }
-    }
-    allWordpressPage {
-      edges {
-        node {
-          slug
-          title
-          id
         }
       }
     }
